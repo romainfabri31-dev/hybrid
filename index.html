@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scripts de Prospection Téléphonique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  :root {
+    --jv-accent: #D4845A;
+    --jv-light: #FDF6EF;
+    --jv-mid: #F0E0CC;
+    --jv-dark: #3D2010;
+    --rb-accent: #2C4A7C;
+    --rb-light: #EEF3FA;
+    --rb-mid: #C5D4EC;
+    --rb-dark: #0D1B33;
+    --text: #1a1a1a;
+    --muted: #666;
+    --border: #e5e5e5;
+    --radius: 12px;
+  }
+ 
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+    background: #f5f4f0;
+    padding: 40px 20px 80px;
+  }
+ 
+  .page-title {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .page-title h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px;
+    font-weight: 400;
+    color: #111;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .page-title p {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+ 
+  .scripts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+ 
+  @media (max-width: 900px) {
+    .scripts-grid { grid-template-columns: 1fr; }
+  }
+ 
+  .script-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+ 
+  .card-header {
+    padding: 28px 28px 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-header.jv { background: var(--jv-light); }
+  .card-header.rb { background: var(--rb-light); }
+ 
+  .color-dots {
+    display: flex; gap: 8px; margin-bottom: 14px;
+  }
+  .dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 500; color: #fff;
+  }
+  .dot.yellow { background: #E6A800; }
+  .dot.green  { background: #3A7D44; }
+  .dot.red    { background: #C0392B; }
+  .dot.blue   { background: #2C4A7C; }
+ 
+  .card-header h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+  .card-header.jv h2 { color: var(--jv-dark); }
+  .card-header.rb h2 { color: var(--rb-dark); }
+ 
+  .card-header .subtitle {
+    font-size: 13px;
+    font-weight: 300;
+  }
+  .card-header.jv .subtitle { color: #7A4020; }
+  .card-header.rb .subtitle { color: #2C4A7C; }
+ 
+  .tags {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px;
+  }
+  .tag {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+    padding: 3px 10px; border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .jv .tag { background: var(--jv-mid); color: #5C2D0D; }
+  .rb .tag { background: var(--rb-mid); color: #0D1B33; }
+ 
+  .card-body { padding: 24px 28px; }
+ 
+  .step {
+    margin-bottom: 22px;
+    border-left: 2px solid var(--border);
+    padding-left: 18px;
+    position: relative;
+  }
+  .step::before {
+    content: attr(data-n);
+    position: absolute;
+    left: -12px;
+    top: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500;
+    border: 1px solid var(--border);
+    background: #fff;
+  }
+  .jv .step::before { color: var(--jv-accent); border-color: var(--jv-accent); }
+  .rb .step::before { color: var(--rb-accent); border-color: var(--rb-accent); }
+ 
+  .step-label {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .jv .step-label { color: var(--jv-accent); }
+  .rb .step-label { color: var(--rb-accent); }
+ 
+  .step h3 {
+    font-size: 13px; font-weight: 500; margin-bottom: 8px; color: #111;
+  }
+ 
+  .speech {
+    border-radius: var(--radius);
+    padding: 13px 16px;
+    font-size: 14px; line-height: 1.65;
+    margin: 8px 0;
+    font-style: italic;
+  }
+  .jv .speech { background: var(--jv-light); color: var(--jv-dark); border-left: 3px solid var(--jv-accent); }
+  .rb .speech { background: var(--rb-light); color: var(--rb-dark); border-left: 3px solid var(--rb-accent); }
+ 
+  .reaction {
+    border-radius: var(--radius);
+    padding: 12px 15px;
+    font-size: 13px; line-height: 1.6;
+    margin: 8px 0;
+    background: #f8f8f6;
+    border: 1px dashed #ccc;
+  }
+  .reaction .r-label {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; margin-bottom: 4px;
+    color: var(--muted);
+  }
+ 
+  .if-block {
+    margin-top: 10px;
+  }
+  .if-block .if-title {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+  }
+  .if-row {
+    display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start;
+  }
+  .if-pill {
+    font-size: 10px; font-weight: 500; white-space: nowrap;
+    padding: 3px 9px; border-radius: 20px; margin-top: 1px; flex-shrink: 0;
+  }
+  .if-pill.pos { background: #E8F5E9; color: #2E7D32; }
+  .if-pill.neg { background: #FEECEC; color: #C0392B; }
+  .if-pill.neu { background: #FFF8E1; color: #7B4F00; }
+ 
+  .if-row p { font-size: 13px; color: #333; line-height: 1.55; }
+ 
+  .tip {
+    border-radius: var(--radius);
+    padding: 11px 15px;
+    font-size: 12.5px;
+    margin: 8px 0;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .tip::before { content: "💡"; flex-shrink: 0; font-size: 14px; }
+  .jv .tip { background: #FFF3E0; color: #5C3317; }
+  .rb .tip { background: #E8EEF8; color: #0D1B33; }
+ 
+  .close-block {
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-top: 10px;
+  }
+  .jv .close-block { background: var(--jv-mid); }
+  .rb .close-block { background: var(--rb-mid); }
+ 
+  .close-block h4 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 17px; font-weight: 400; margin-bottom: 8px;
+  }
+  .jv .close-block h4 { color: var(--jv-dark); }
+  .rb .close-block h4 { color: var(--rb-dark); }
+ 
+  .close-block p { font-size: 13px; line-height: 1.6; }
+  .jv .close-block p { color: #5C2D0D; }
+  .rb .close-block p { color: #1a2d4d; }
+ 
+  hr.divider {
+    border: none; border-top: 1px dashed #ddd; margin: 20px 0;
+  }
+ 
+  .legend {
+    max-width: 600px; margin: 0 auto 40px;
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; gap: 7px; align-items: center; font-size: 12px; color: var(--muted); }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 4px; }
+  .ls-speech-jv { background: var(--jv-light); border-left: 3px solid var(--jv-accent); border-radius: 0 4px 4px 0; }
+  .ls-speech-rb { background: var(--rb-light); border-left: 3px solid var(--rb-accent); border-radius: 0 4px 4px 0; }
+  .ls-reaction   { background: #f8f8f6; border: 1px dashed #ccc; }
+  .ls-tip        { background: #FFF3E0; }
+</style>
+</head>
+<body>
+ 
+<div class="page-title">
+  <h1>Scripts de Prospection Téléphonique</h1>
+  <p>Objectif : décrocher une visio avec premier concept logo gratuit, sans engagement</p>
+</div>
+ 
+<div class="legend">
+  <div class="legend-item"><div class="legend-swatch ls-speech-jv"></div> Ce que tu dis</div>
+  <div class="legend-item"><div class="legend-swatch ls-reaction"></div> Comment réagir / observer</div>
+  <div class="legend-item"><div class="legend-swatch ls-tip"></div> Conseil / rappel</div>
+</div>
+ 
+<div class="scripts-grid">
+ 
+  <!-- ===== SCRIPT JAUNE / VERT ===== -->
+  <div class="script-card jv">
+    <div class="card-header jv">
+      <div class="color-dots">
+        <div class="dot yellow">J</div>
+        <div class="dot green">V</div>
+      </div>
+      <h2>Connexion & Humanité</h2>
+      <div class="subtitle">Profils Jaune (Joie) et Vert (Tristesse)</div>
+      <div class="tags jv">
+        <span class="tag">Chaleureux</span>
+        <span class="tag">Empathique</span>
+        <span class="tag">Écoute active</span>
+        <span class="tag">Slow selling</span>
+      </div>
+    </div>
+ 
+    <div class="card-body jv">
+ 
+      <!-- ÉTAPE 1 -->
+      <div class="step" data-n="1">
+        <div class="step-label">Accroche — 0 à 10 sec</div>
+        <h3>Capter le bonjour & s'adapter</h3>
+        <div class="reaction">
+          <div class="r-label">Observe d'abord</div>
+          Jaune : voix enjouée, répond vite, bavard → énergie haute.<br>
+          Vert : voix douce, hésitante, discret → ralentir le rythme, adoucir le ton.
+        </div>
+        <div class="speech">
+          « Bonjour [Prénom] ! C'est [Ton prénom], je voulais juste vous passer un petit coup de fil rapide — vous avez deux minutes ? »
+        </div>
+        <div class="tip">Ne pas dire "je vous dérange". Formuler positivement. Deux minutes = sans pression.</div>
+        <div class="if-block">
+          <div class="if-title">Selon la réponse</div>
+          <div class="if-row"><span class="if-pill pos">Oui</span><p>Enchaîner directement sur l'étape 2 avec chaleur.</p></div>
+          <div class="if-row"><span class="if-pill neg">Pas le moment</span><p>« Aucun souci du tout ! Quel serait le meilleur moment pour vous dans la journée ? » → noter et rappeler.</p></div>
+        </div>
+      </div>
+ 
+      <!-- ÉTAPE 2 -->
+      <div class="step" data-n="2">
+        <div class="step-label">Les 3 Oui — Connexion</div>
+        <h3>Créer une dynamique positive</h3>
+        <div class="speech">
+          « Vous êtes bien [Prénom], la fondatrice/le fondateur de [Nom de la marque] ? »<br><br>
+          *(réponse)* « Super ! Et vous êtes sur [ville/région] c'est ça ? »<br><br>
+          *(réponse)* « Et vous faites dans le [beauté / accessoires / prêt-à-porter], si je me souviens bien ? »
+        </div>
+        <div class="tip">3 questions évidentes = 3 oui = dynamique de connexion enclenchée. Ne pas s'arrêter là, enchaîner avec fluidité.</div>
+      </div>
+ 
+      <!-- ÉTAPE 3 -->
+      <div class="step" data-n="3">
+        <div class="step-label">Faire Exister — La Star</div>
+        <h3>Lui faire raconter son histoire</h3>
+        <div class="speech">
+          « J'ai vu votre marque et j'avoue que j'étais curieux(se) — c'est quoi l'histoire derrière ? Vous avez commencé comment ? »
+        </div>
+        <div class="reaction">
+          <div class="r-label">Écoute active</div>
+          Jaune : va parler beaucoup, avec passion → laisser venir, rebondir avec enthousiasme ("Ah trop bien !", "C'est exactement ce genre de projet que j'aime !").<br>
+          Vert : plus pudique → relancer doucement : « Et humainement, ça vous a apporté quoi cette aventure ? »
+        </div>
+        <div class="tip">C'est lui la star. Plus il parle, plus vous avez d'info pour personnaliser votre pitch ensuite. Ne pas interrompre.</div>
+      </div>
+ 
+      <!-- ÉTAPE 4 -->
+      <div class="step" data-n="4">
+        <div class="step-label">Transition — Branding</div>
+        <h3>Relier l'histoire à l'identité visuelle</h3>
+        <div class="speech">
+          « Ce que vous me décrivez là, c'est vraiment une belle histoire — et j'imagine que vous voulez que ça se ressente directement quand quelqu'un tombe sur votre marque, non ? »
+        </div>
+        <div class="reaction">
+          <div class="r-label">Selon la réponse</div>
+          Il acquiesce → vous ouvrez la porte naturellement.<br>
+          Il hésite → « C'est quoi qui vous manquerait visuellement aujourd'hui, si vous deviez pointer un truc ? »
+        </div>
+      </div>
+ 
+      <!-- ÉTAPE 5 -->
+      <div class="step" data-n="5">
+        <div class="step-label">Traitement des objections</div>
+        <h3>Méthode R-A-I-R si besoin</h3>
+        <div class="if-block">
+          <div class="if-title">Objections fréquentes</div>
+          <div class="if-row"><span class="if-pill neg">J'ai pas le budget</span><p>« Je comprends totalement ! D'ailleurs c'est pour ça que ce premier échange est gratuit, sans engagement — juste pour vous montrer ce que ça pourrait donner. Qu'est-ce qui ferait que vous vous penchiez là-dessus, quand le moment serait venu ? »</p></div>
+          <div class="if-row"><span class="if-pill neg">J'ai déjà un logo</span><p>« Ah c'est bien ! Et vous l'aimez à 100% ? Vous vous dites vraiment qu'il raconte bien votre histoire telle qu'elle est aujourd'hui ? » → laisser répondre.</p></div>
+          <div class="if-row"><span class="if-pill neu">Je réfléchis</span><p>« Bien sûr ! C'est quoi qui vous ferait dire que le timing est bon pour ce genre de démarche ? »</p></div>
+        </div>
+      </div>
+ 
+      <!-- ÉTAPE 6 — CLOSE -->
+      <div class="step" data-n="6">
+        <div class="step-label">Closing — La Visio</div>
+        <h3>Proposer la rencontre</h3>
+        <div class="speech">
+          « Ce que j'aimerais faire, c'est qu'on prenne 30 minutes ensemble en visio — je prépare un premier concept de logo pour vous, gratuitement, sans aucun engagement. Vous repartez avec quelque chose de concret dans les mains, et on voit si ça matche avec ce que vous imaginez. Ça vous dirait qu'on cale ça ? »
+        </div>
+        <div class="reaction">
+          <div class="r-label">Silence après la question → ne pas remplir le vide</div>
+          Laisser le prospect répondre. Le silence joue en votre faveur ici.
+        </div>
+        <div class="if-block">
+          <div class="if-title">Selon la réponse</div>
+          <div class="if-row"><span class="if-pill pos">Oui</span><p>« Super ! Vous préférez en début ou fin de semaine ? Matin ou après-midi ? » → deux options concrètes, pas une question ouverte.</p></div>
+          <div class="if-row"><span class="if-pill neg">Non / pas maintenant</span><p>« Pas de souci du tout. Dans ce cas, quand est-ce que je peux vous recontacter pour que le timing soit mieux ? » → noter la date précise.</p></div>
+        </div>
+        <div class="close-block">
+          <h4>Fin d'appel — Jaune/Vert</h4>
+          <p>Jaune : finir sur une note chaleureuse et légère. « Avec plaisir, j'ai hâte de voir ce qu'on va pouvoir créer ensemble ! »<br>
+          Vert : rassurer une dernière fois. « Pas de pression, c'est vraiment juste pour vous donner une idée concrète — aucun engagement de votre côté. »</p>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+ 
+  <!-- ===== SCRIPT ROUGE / BLEU ===== -->
+  <div class="script-card rb">
+    <div class="card-header rb">
+      <div class="color-dots">
+        <div class="dot red">R</div>
+        <div class="dot blue">B</div>
+      </div>
+      <h2>Résultat & Légitimité</h2>
+      <div class="subtitle">Profils Rouge (Colère) et Bleu (Peur)</div>
+      <div class="tags rb">
+        <span class="tag">Direct</span>
+        <span class="tag">Efficace</span>
+        <span class="tag">Concret</span>
+        <span class="tag">Crédibilité</span>
+      </div>
+    </div>
+ 
+    <div class="card-body rb">
+ 
+      <!-- ÉTAPE 1 -->
+      <div class="step" data-n="1">
+        <div class="step-label">Accroche — 0 à 10 sec</div>
+        <h3>Capter le bonjour & calibrer</h3>
+        <div class="reaction">
+          <div class="r-label">Observe d'abord</div>
+          Rouge : voix sèche, directe, peu de place aux formules. → Aller vite, ne pas tourner autour du pot.<br>
+          Bleu : voix neutre, prudente, économe. → Être carré, précis, montrer de la rigueur dès le départ.
+        </div>
+        <div class="speech">
+          « Bonjour [Prénom], c'est [Ton prénom]. Je vous appelle pour quelque chose de court et de concret — vous avez deux minutes ? »
+        </div>
+        <div class="tip">Pas de "je vous dérange". Ton affirmé dès le départ. "Court et concret" = signal immédiat que vous respectez son temps.</div>
+        <div class="if-block">
+          <div class="if-title">Selon la réponse</div>
+          <div class="if-row"><span class="if-pill pos">Oui</span><p>Enchaîner directement sans détour.</p></div>
+          <div class="if-row"><span class="if-pill neg">Pas maintenant</span><p>« Aucun problème. Quel créneau vous convient le mieux dans la journée pour qu'on échange ? »</p></div>
+        </div>
+      </div>
+ 
+      <!-- ÉTAPE 2 -->
+      <div class="step" data-n="2">
+        <div class="step-label">Les 3 Oui — Ancrage rapide</div>
+        <h3>Valider les bases, sans s'étaler</h3>
+        <div class="speech">
+          « Vous êtes bien [Prénom], à la tête de [Nom de la marque] ? »<br><br>
+          *(réponse)* « Et vous êtes positionnés sur le [beauté / accessoires / mode], c'est ça ? »<br><br>
+          *(réponse)* « Et votre cible, c'est bien du B2C, vente directe aux consommateurs ? »
+        </div>
+        <div class="tip">3 faits vérifiables = 3 oui rapides. Ça montre que vous avez fait vos devoirs. Rouge et Bleu apprécient la préparation.</div>
+      </div>
+ 
+      <!-- ÉTAPE 3 -->
+      <div class="step" data-n="3">
+        <div class="step-label">Faire Exister — La Maîtrise</div>
+        <h3>Lui donner le pouvoir de s'exprimer</h3>
+        <div class="speech">
+          Rouge : « Vous qui avez lancé [Marque] — c'était quoi la vision de départ ? Où vous voulez l'emmener ? »<br><br>
+          Bleu : « Vous avez une belle marque. C'est quoi, selon vous, ce qui la différencie vraiment de ce qui existe déjà sur le marché ? »
+        </div>
+        <div class="reaction">
+          <div class="r-label">Écoute active ciblée</div>
+          Rouge : va parler de domination, d'objectifs, de chiffres → rebondir sur la vision, le futur, la croissance.<br>
+          Bleu : va parler de qualité, de rigueur, de détails → rebondir sur l'expertise, la cohérence, les standards.
+        </div>
+      </div>
+ 
+      <!-- ÉTAPE 4 -->
+      <div class="step" data-n="4">
+        <div class="step-label">Transition — Branding</div>
+        <h3>Relier la vision au visuel</h3>
+        <div class="speech">
+          Rouge : « Avec des ambitions comme les vôtres, est-ce que votre identité visuelle actuelle est vraiment au niveau de là où vous voulez aller ? »<br><br>
+          Bleu : « Est-ce que votre identité visuelle reflète précisément le niveau de qualité et de sérieux que vous mettez dans votre produit ? »
+        </div>
+        <div class="reaction">
+          <div class="r-label">Laisser la question faire son effet</div>
+          Ne pas répondre à leur place. Silence = réflexion = ouverture. C'est exactement ce qu'on cherche.
+        </div>
+      </div>
+ 
+      <!-- ÉTAPE 5 -->
+      <div class="step" data-n="5">
+        <div class="step-label">Traitement des objections</div>
+        <h3>Méthode R-A-I-R — version directe</h3>
+        <div class="if-block">
+          <div class="if-title">Objections fréquentes</div>
+          <div class="if-row"><span class="if-pill neg">J'ai pas le budget</span>
+            <p>Rouge : « Je comprends. D'ailleurs il ne s'agit pas de budget pour l'instant — je vous propose de voir d'abord ce que ça donnerait. Qu'est-ce qui vous ferait dire que c'est le bon moment d'investir là-dessus ? »<br>
+            Bleu : « Tout à fait. C'est justement pour ça que le premier échange est gratuit — pas de risque, vous évaluez la qualité avant de décider quoi que ce soit. »</p>
+          </div>
+          <div class="if-row"><span class="if-pill neg">J'ai déjà quelqu'un</span>
+            <p>« Je comprends. Et ce que vous avez actuellement, ça vous correspond à 100% en termes d'image et de positionnement ? » → laisser répondre.</p>
+          </div>
+          <div class="if-row"><span class="if-pill neu">Envoyez-moi un mail</span>
+            <p>« Bien sûr. Avant que je le fasse, juste pour que je vous envoie quelque chose de vraiment pertinent : c'est quoi votre priorité numéro 1 en ce moment pour la marque ? »</p>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- ÉTAPE 6 — CLOSE -->
+      <div class="step" data-n="6">
+        <div class="step-label">Closing — La Visio</div>
+        <h3>Proposer la rencontre</h3>
+        <div class="speech">
+          Rouge : « Ce que je vous propose, c'est 30 minutes en visio. Je viens avec un premier concept de logo — concret, prêt, gratuit. Vous regardez, vous donnez votre avis, et vous décidez. C'est ça ou ça pour vous cette semaine ? »<br><br>
+          Bleu : « Je prépare un premier concept de logo en amont de notre échange — vous pouvez évaluer le niveau, la cohérence avec votre positionnement, sans aucun engagement. Vous préférez débuter de semaine ou en fin de semaine ? »
+        </div>
+        <div class="reaction">
+          <div class="r-label">Après la question — ne pas remplir le silence</div>
+          Rouge : appréciera la directivité. Deux options claires = facilite sa décision = il garde le contrôle.<br>
+          Bleu : appréciera d'avoir le temps de "réfléchir". Deux options = il ne se sent pas brusqué.
+        </div>
+        <div class="if-block">
+          <div class="if-title">Selon la réponse</div>
+          <div class="if-row"><span class="if-pill pos">Oui</span><p>Confirmer date + heure + rappel de l'ordre du jour. Envoyer une invitation agenda. Soigner la confirmation écrite — Bleu appréciera.</p></div>
+          <div class="if-row"><span class="if-pill neg">Non / pas convaincu</span><p>« Pas de problème. Quand est-ce que je peux vous recontacter pour que le timing soit aligné avec vos priorités ? » → date précise.</p></div>
+        </div>
+        <div class="close-block">
+          <h4>Fin d'appel — Rouge/Bleu</h4>
+          <p>Rouge : finir vite et efficacement. « Parfait. Je cale ça de mon côté et vous recevez l'invitation. À [jour] ! »<br>
+          Bleu : rassurer sur la rigueur. « Je prépare ça sérieusement en amont. Vous aurez quelque chose de réfléchi à regarder. À très vite. »</p>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+ 
+</div>
+ 
+</body>
+</html>
+ 
